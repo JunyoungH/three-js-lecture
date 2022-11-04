@@ -13,16 +13,38 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 // 2. Create Scene
 const scene = new THREE.Scene();
 
-/* 
- * 3. Create Camera
- * - fov: 시야각
- * - aspect: 종횡비 (가로,세로 비율 = width / height)
- * - near: 가까운 거리 한계치 (한계치 넘어가면 안보임)
- * - far: 먼거리 한계치 (한계치 넘어가면 안보임)
-*/ 
-const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
+//3. Create Camera
+// Perspective Camera, Orthographic Camera
+
+const aspect = window.innerWidth / window.innerHeight;
+
+// Perspective Camera (원근 카메라)
+// 원근감이 있기 때문에 절두체 모양
+// - fov: 시야각
+// - aspect: 종횡비 (가로,세로 비율 = width / height)
+// - near: 절두체 앞면 거리 (거리 넘어가면 안보임)
+// - far: 절두체 뒷면 거리 (거리 넘어가면 안보임)
+// const camera = new THREE.PerspectiveCamera(
+//     75,
+//     aspect,
+//     0.1,
+//     1000
+// );
+
+// Orthographic Camera (직교 카메라)
+// 예: TRPG, 쿼터뷰 게임들 카메라
+// 원근감 없기 때문에 직육면체 모양
+// - left: 직육면체 왼쪽 
+// - right: 직육면체 오른쪽
+// - top: 직육면체 위쪽
+// - bottom: 직육면체 아래쪽 
+// - near: 직육면체 앞면 거리
+// - far: 직육면체 뒷면 거리
+const camera = new THREE.OrthographicCamera(
+    -(aspect),
+    aspect,
+    1,
+    -1,
     0.1,
     1000
 );
@@ -31,6 +53,13 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.x = 1;
 camera.position.y = 2;
 camera.position.z = 5;
+
+// 원점: 0, 0, 0
+camera.lookAt(0, 0, 0);
+camera.zoom = 0.5;
+
+// zoom 반영
+camera.updateProjectionMatrix();
 scene.add(camera);
 
 // 5. Create Mesh (Geometry + Material)
