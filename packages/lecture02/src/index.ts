@@ -102,6 +102,10 @@ renderer.render(scene, camera);
 
 // 9. Animation
 let direction = 1;
+//const clock = new THREE.Clock();
+
+let oldTime = Date.now();
+
 const draw = () => {
     // rotate y axis
     // radian
@@ -109,8 +113,28 @@ const draw = () => {
     //mesh.rotation.y += 0.01;
 
     // Use MathUtils
-    mesh.rotation.y += THREE.MathUtils.degToRad(1);
-    mesh.position.y += 0.05 * direction;
+    //mesh.rotation.y += THREE.MathUtils.degToRad(1);
+
+    // Animation Optimization with Clock Elapsed Time (경과 시간)
+    // const time = clock.getElapsedTime();
+
+    // mesh.rotation.y += 2 * time;
+    // mesh.position.y += 0.05; ===> getElapsedTime() not working!
+
+    // Animation Optimization with Clock Delta (Draw 간 시간 차)
+    // getElapsedTime() 하고 같이 못씀
+    // const delta = clock.getDelta();
+
+    // mesh.rotation.y += 2 * delta;
+    // mesh.position.y += (3 * delta) * direction;
+
+    // Animation Optimization with JS Date (calculate delta)
+    const newTime = Date.now();
+    const deltaTime = newTime - oldTime;
+    oldTime = newTime;
+    
+    mesh.rotation.y += deltaTime * 0.005;
+    mesh.position.y += (deltaTime * 0.002) * direction;
 
     if (mesh.position.y > 3) direction = -1;
     if (mesh.position.y < -3) direction = 1;
