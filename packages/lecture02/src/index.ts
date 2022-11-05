@@ -64,8 +64,8 @@ const camera = new THREE.PerspectiveCamera(
 // );
 
 // 4. Set Camera Position
-//camera.position.x = 2;
-//camera.position.y = 2;
+// camera.position.x = 2;
+camera.position.y = 1;
 camera.position.z = 5;
 
 // 원점: 0, 0, 0
@@ -88,14 +88,24 @@ const material = new MeshStandardMaterial({
     color: '#ff0000'
 });
 
-const mesh = new THREE.Mesh(geometry, material);
-scene.add(mesh);
+// const mesh = new THREE.Mesh(geometry, material);
+// scene.add(mesh);
 
-// 8. Light 
-const light = new THREE.DirectionalLight('#ffffff', 1.5);
-light.position.x = 1;
-light.position.z = 2;
+// 8. Light
+const light = new THREE.DirectionalLight('#ffffff', 1);
+light.position.y = 3;
+light.position.z = 10;
 scene.add(light);
+
+// 10. Fog
+scene.fog = new THREE.Fog('#000000', 3, 7);
+const meshes = Array.from({ length: 10 }, () => {
+    const newMesh = new THREE.Mesh(geometry, material);
+    newMesh.position.x = Math.random() * 5 - 2.5;
+    newMesh.position.z = Math.random() * 5 - 2.5;
+    scene.add(newMesh);
+    return newMesh;
+});
 
 // 6. Draw
 renderer.render(scene, camera);
@@ -105,7 +115,6 @@ let direction = 1;
 //const clock = new THREE.Clock();
 
 let oldTime = Date.now();
-
 const draw = () => {
     // rotate y axis
     // radian
@@ -133,18 +142,23 @@ const draw = () => {
     const deltaTime = newTime - oldTime;
     oldTime = newTime;
     
-    mesh.rotation.y += deltaTime * 0.005;
-    mesh.position.y += (deltaTime * 0.002) * direction;
+    // mesh.rotation.y += deltaTime * 0.005;
+    // mesh.position.y += (deltaTime * 0.002) * direction;
 
-    if (mesh.position.y > 3) direction = -1;
-    if (mesh.position.y < -3) direction = 1;
+    // if (mesh.position.y > 3) direction = -1;
+    // if (mesh.position.y < -3) direction = 1;
+
+
+    meshes.forEach(mesh => {
+        mesh.rotateY(deltaTime * 0.001);
+    });
 
     renderer.render(scene, camera)
-
-    //window.requestAnimationFrame(draw);
+    window.requestAnimationFrame(draw);
 
     // Optimized for WebXR
     renderer.setAnimationLoop(draw);
+
 };
 
 draw();
