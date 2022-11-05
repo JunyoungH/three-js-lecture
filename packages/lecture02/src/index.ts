@@ -1,6 +1,6 @@
 import './main.scss';
 import * as THREE from 'three';
-import { render } from 'sass';
+import gsap from 'gsap';
 import { MeshStandardMaterial } from 'three';
 
 // 1. Create Renderer Dynamically
@@ -88,8 +88,16 @@ const material = new MeshStandardMaterial({
     color: '#ff0000'
 });
 
-// const mesh = new THREE.Mesh(geometry, material);
-// scene.add(mesh);
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+
+// const meshes = Array.from({ length: 10 }, () => {
+//     const newMesh = new THREE.Mesh(geometry, material);
+//     newMesh.position.x = Math.random() * 5 - 2.5;
+//     newMesh.position.z = Math.random() * 5 - 2.5;
+//     scene.add(newMesh);
+//     return newMesh;
+// });
 
 // 8. Light
 const light = new THREE.DirectionalLight('#ffffff', 1);
@@ -99,13 +107,7 @@ scene.add(light);
 
 // 10. Fog
 scene.fog = new THREE.Fog('#000000', 3, 7);
-const meshes = Array.from({ length: 10 }, () => {
-    const newMesh = new THREE.Mesh(geometry, material);
-    newMesh.position.x = Math.random() * 5 - 2.5;
-    newMesh.position.z = Math.random() * 5 - 2.5;
-    scene.add(newMesh);
-    return newMesh;
-});
+
 
 // 6. Draw
 renderer.render(scene, camera);
@@ -149,12 +151,12 @@ const draw = () => {
     // if (mesh.position.y < -3) direction = 1;
 
 
-    meshes.forEach(mesh => {
-        mesh.rotateY(deltaTime * 0.001);
-    });
+    // meshes.forEach(mesh => {
+    //     mesh.rotateY(deltaTime * 0.001);
+    // });
 
     renderer.render(scene, camera)
-    window.requestAnimationFrame(draw);
+    //window.requestAnimationFrame(draw);
 
     // Optimized for WebXR
     renderer.setAnimationLoop(draw);
@@ -162,6 +164,16 @@ const draw = () => {
 };
 
 draw();
+
+// 11. gsap (Animation with external library)
+gsap.to(
+    mesh.position,
+    {
+        duration: 1,
+        y: 2,
+        z: 3
+    }
+)
 
 // 7. Window Resize Event
 const setSize = () => {
