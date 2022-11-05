@@ -1,13 +1,14 @@
 import './main.scss';
 import * as THREE from 'three';
 import { render } from 'sass';
+import { MeshStandardMaterial } from 'three';
 
 // 1. Create Renderer Dynamically
 const canvas = document.querySelector('#three-canvas') as HTMLCanvasElement;
 const renderer = new THREE.WebGLRenderer({ 
     canvas,
     antialias: true, // Anti-Aliasing option
-    alpha: true // opacity option
+    alpha: false // opacity option
 });
 renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -16,15 +17,15 @@ renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
 //renderer.setClearAlpha(0.5); // set density
 
 // Set Renderer Background Color
-renderer.setClearColor('#00ff00'); 
-renderer.setClearAlpha(0.5);
+// renderer.setClearColor('#00ff00'); 
+// renderer.setClearAlpha(0.5);
 
 // 2. Create Scene
 const scene = new THREE.Scene();
 
 // priority Scene > Renderer
 // Renderer Color will be overriden by Scene Color Setting
-scene.background = new THREE.Color('blue')
+//scene.background = new THREE.Color('blue')
 
 //3. Create Camera
 // Perspective Camera, Orthographic Camera
@@ -63,8 +64,8 @@ const camera = new THREE.PerspectiveCamera(
 // );
 
 // 4. Set Camera Position
-camera.position.x = 1;
-camera.position.y = 2;
+//camera.position.x = 2;
+//camera.position.y = 2;
 camera.position.z = 5;
 
 // 원점: 0, 0, 0
@@ -77,14 +78,52 @@ scene.add(camera);
 
 // 5. Create Mesh (Geometry + Material)
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({
+
+// No lighting effect with MeshBasicMaterial
+// const material = new THREE.MeshBasicMaterial({
+//     color: '#ff0000'
+// });
+
+const material = new MeshStandardMaterial({
     color: '#ff0000'
 });
+
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
+// 8. Light 
+const light = new THREE.DirectionalLight('#ffffff', 1.5);
+light.position.x = 1;
+light.position.z = 2;
+scene.add(light);
+
 // 6. Draw
 renderer.render(scene, camera);
+
+// 9. Animation
+let direction = 1;
+const draw = () => {
+    // rotate y axis
+    // radian
+    // 360deg = 2PI
+    //mesh.rotation.y += 0.01;
+
+    // Use MathUtils
+    mesh.rotation.y += THREE.MathUtils.degToRad(1);
+    mesh.position.y += 0.05 * direction;
+
+    if (mesh.position.y > 3) direction = -1;
+    if (mesh.position.y < -3) direction = 1;
+
+    renderer.render(scene, camera)
+
+    //window.requestAnimationFrame(draw);
+
+    // Optimized for WebXR
+    renderer.setAnimationLoop(draw);
+};
+
+draw();
 
 // 7. Window Resize Event
 const setSize = () => {
