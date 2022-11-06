@@ -1,0 +1,11 @@
+{
+  "name": "lecture02",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "dev": "webpack serve --config ./webpack.dev.js"
+  },
+  "devDependencies": {
+    "gsap": "^3.11.3"
+  }
+}
