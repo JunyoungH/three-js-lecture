@@ -64,18 +64,6 @@ directionalLight.position.y = 1;
 directionalLight.position.z = 2;
 scene.add(directionalLight);
 
-// 10. AxesHelper
-// const axesHelper = new THREE.AxesHelper(3);
-// scene.add(axesHelper);
-
-// 11. GridHelpder 
-// const gridHelper = new THREE.GridHelper(5);
-// scene.add(gridHelper);
-
-// camera.lookAt(mesh.position);
-// camera.zoom = 1;
-// camera.updateProjectionMatrix();
-
 // 6. Draw
 renderer.render(scene, camera);
 
@@ -85,12 +73,7 @@ const draw = () => {
     // Animation Optimization with Clock Elapsed Time (경과 시간)
     const time = clock.getElapsedTime();
 
-    // Show Stats
-    stats.update();
-
     mesh.rotation.y = time;
-
-    camera.lookAt(mesh.position);
 
     renderer.render(scene, camera)
     renderer.setAnimationLoop(draw);
