@@ -1,8 +1,13 @@
-// Subject 
-// Transform
+// Subject: Transform
+// 1. Distance
+// 2. Scale
+// 3. Rotation
+// 4. Grouping
+
 import './main.scss';
 import * as THREE from 'three';
 import { MeshStandardMaterial } from 'three';
+import { GUI } from 'dat.gui';
 
 // 1. Create Renderer Dynamically
 const canvas = document.querySelector('#three-canvas') as HTMLCanvasElement;
@@ -51,6 +56,8 @@ const material = new MeshStandardMaterial({
 });
 
 const mesh = new THREE.Mesh(geometry, material);
+
+camera.lookAt(mesh.position);
 scene.add(mesh);
 
 // 8. Light
@@ -64,16 +71,60 @@ directionalLight.position.y = 1;
 directionalLight.position.z = 2;
 scene.add(directionalLight);
 
+// Add AxisHelper
+const axisHelper = new THREE.AxesHelper(5);
+scene.add(axisHelper);
+
+// Add GUI Control Panel
+const dat = new GUI();
+dat.add(camera.position, 'x', -5, 5, 0.01).name('Camera X');
+dat.add(camera.position, 'y', -5, 5, 0.01).name('Camera Y');
+dat.add(camera.position, 'z', 2, 10, 0.01).name('Camera Z');
+
 // 6. Draw
 renderer.render(scene, camera);
+
+// CAUTION : Mesh Rotation Common Issue 
+// Scenario : The character changes of view 60 degrees to the right and 20 degrees up
+// Issue : The character look at wrong direction since AXIS is static 
+// Solution : Update AXIS along with rotation
+mesh.rotation.reorder('YXZ');
+mesh.rotation.y = THREE.MathUtils.degToRad(45);
+mesh.rotation.x = THREE.MathUtils.degToRad(20);
 
 // 9. Animation
 const clock = new THREE.Clock();
 const draw = () => {
     // Animation Optimization with Clock Elapsed Time (경과 시간)
-    const time = clock.getElapsedTime();
+    const delta = clock.getDelta();
 
-    mesh.rotation.y = time;
+    //mesh.position.set(-1, 0, 0);
+
+    // Get Vector Length 
+    // console.log(mesh.position.length());
+
+    // Set Position Distance
+    // console.log(mesh.position.distanceTo(new THREE.Vector3(1, 2, 0)));
+    // console.log(mesh.position.distanceTo(camera.position));
+
+    // Set Scale
+    // mesh.scale.x = 2;
+    // mesh.scale.y = 0.5;
+    //mesh.scale.set(0.5, 1, 2);
+
+    // Set Rotation
+
+    // Degree To Radian
+    // mesh.rotation.x = 45 * Math.PI / 180;
+
+    // 360 deg = 2 * Math.PI
+    // mesh.rotation.x = Math.PI / 3; // 60 deg - close to 1
+    // mesh.rotation.x = 1 // Almost same result as Math.PI / 3 
+
+    // With MathUtils
+    // mesh.rotation.x = THREE.MathUtils.degToRad(60);
+
+    //mesh.rotation.z += delta;
 
     renderer.render(scene, camera)
     renderer.setAnimationLoop(draw);
