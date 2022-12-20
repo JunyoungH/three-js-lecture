@@ -1,3 +1,10 @@
+const KEY_BINDING = Object.freeze({
+    forward: ['KeyW', 'ArrowUp'],
+    backward: ['KeyS', 'ArrowDown'],
+    left: ['KeyA', 'ArrowLeft'],
+    right: ['KeyD', 'ArrowRight']
+});
+
 export class KeyController {
     currentDirection:{[key: string]: boolean};    
 
@@ -14,27 +21,6 @@ export class KeyController {
     }
 
     isDirection = (direction: 'forward' | 'backward' | 'left' | 'right') => {
-        switch(direction) {
-            case 'forward': 
-                return (
-                    this.currentDirection['KeyW'] ||
-                    this.currentDirection['ArrowUp']
-                );
-            case 'backward':
-                return (
-                    this.currentDirection['KeyS'] ||
-                    this.currentDirection['ArrowDown']
-                );
-            case 'left':
-                return (
-                    this.currentDirection['KeyA'] ||
-                    this.currentDirection['ArrowLeft']
-                );
-            case 'right':
-                return (
-                    this.currentDirection['KeyD'] ||
-                    this.currentDirection['ArrowRight']
-                );
-        }
+        return KEY_BINDING[direction].some(key => this.currentDirection[key]);
     }
 }
