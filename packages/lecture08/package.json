@@ -1,0 +1,8 @@
+{
+  "name": "lecture08",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "dev": "webpack serve --config ./webpack.dev.js"
+  }
+}
